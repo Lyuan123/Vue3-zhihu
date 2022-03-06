@@ -1,7 +1,7 @@
 <template>
   <div class="container" id="app">
     <global-header :user="currentUser"></global-header>
-    <!-- <column-list :list="list"/> -->
+    <column-list :list="list"/>
     <validate-form @form-submit="onFormSubmit">
       <div class="mb-3">
         <label class="form-label"> 邮箱地址</label>
