@@ -14,6 +14,7 @@
         {{passwordVal}}
       </div>
       <template #submit>
+        <!-- #submit就是插槽的简便写法 -->
         <span class="btn btn-danger">Submit</span>
       </template>
     </validate-form>
