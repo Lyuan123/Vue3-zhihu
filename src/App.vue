@@ -1,37 +1,20 @@
 <template>
   <div class="container" id="app">
     <global-header :user="currentUser"></global-header>
-    <column-list :list="list"/>
-    <validate-form @form-submit="onFormSubmit">
-      <div class="mb-3">
-        <label class="form-label"> 邮箱地址</label>
-        <validate-input :rules="emailRules" v-model="emailVal" placeholder="请输入邮箱地址" type="text" ref="inputRef"></validate-input>
-        {{emailVal}}
-      </div>
-      <div class="mb-3">
-        <label class="form-label"> 密码</label>
-        <validate-input :rules="emailRules" v-model="passwordVal" placeholder="请输入密码" type="password"></validate-input>
-        {{passwordVal}}
-      </div>
-      <template #submit>
-        <!-- #submit就是插槽的简便写法 -->
-        <span class="btn btn-danger">Submit</span>
-      </template>
-    </validate-form>
+        <router-view></router-view>
+
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive,ref } from "vue";
+import { defineComponent, reactive,ref ,computed} from "vue";
+import {useStore} from 'vuex'
 import "bootstrap/dist/css/bootstrap.min.css";
 import ColumnList, { ColumnProps } from "./components/ColumnList.vue";
 import GlobalHeader, { UserProps } from "./components/GlobalHeader.vue";
 import ValidateInput, { RulesProp } from './components/ValidateInput.vue'
 import ValidateForm from './components/ValidateForm.vue'
-const currentUser: UserProps = {
-  isLogin: true,
-  name: "asdm",
-};
+
 const testData: ColumnProps[] = [
   {
     id: 1,
@@ -71,38 +54,11 @@ export default defineComponent({
     ValidateForm
   },
   setup() {
-    const inputRef = ref<any>()
-    const emailVal = ref('123@1test.com')
-    const passwordVal = ref('123')
-    const emailRules:RulesProp = [
-      {type:'required',message:'电子邮箱地址不能为空'},
-      {type:'email',message:'请输入正确的电子邮箱格式'}
-    ]
-    const emailRef = reactive({
-      val: "",
-      error: false,
-      message: "",
-    })
-    const validateEmail = () =>{
-      if(emailRef.val.trim() === ''){
-        emailRef.error = true
-        emailRef.message = 'can no be emeu'
-      }
-    }
-    const onFormSubmit = (result:boolean) =>{
-      console.log('result', inputRef.value.validateInput());
-      
-    }
+    const store = useStore()
+    const currentUser = computed(() => store.state.user)
+  
     return {
-      list: testData,
       currentUser,
-      emailRef,
-      validateEmail,
-      emailRules,
-      emailVal,
-      passwordVal,
-      onFormSubmit,
-      inputRef
     };
   },
 });
