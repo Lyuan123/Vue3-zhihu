@@ -7,7 +7,7 @@ import ColumnDetail from './views/ColumnDetail.vue'
 import CreatePost from './views/CreatePost.vue'
 import PostDetail from './views/PostDetail.vue'
 import { createApp } from 'vue'
-// import store from './store'
+import store from './store'
 const routerHistory = createWebHistory()
 const router = createRouter({
   history: routerHistory,
@@ -47,9 +47,6 @@ const router = createRouter({
     // }
   ]
 })
-// const app = createApp(App)
-// app.use(router)
-// app.mount('#app')
 // router.beforeEach((to, from, next) => {
 //   const { user, token } = store.state
 //   const { requiredLogin, redirectAlreadyLogin } = to.meta

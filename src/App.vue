@@ -1,64 +1,55 @@
 <template>
   <div class="container" id="app">
     <global-header :user="currentUser"></global-header>
-        <router-view></router-view>
-
+    <h1>{{ error.message }}</h1>
+    <loader v-if="isLoading" text="拼命加载中"></loader>
+    <router-view></router-view>
+    <footer class="text-center py-4 text-secondary bg-light mt-6">
+      <small>
+        <ul class="list-inline mb-0">
+          <li class="list-inline-item">© 2020 者也专栏</li>
+          <li class="list-inline-item">课程</li>
+          <li class="list-inline-item">文档</li>
+          <li class="list-inline-item">联系</li>
+          <li class="list-inline-item">更多</li>
+        </ul>
+      </small>
+    </footer>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive,ref ,computed} from "vue";
-import {useStore} from 'vuex'
+import { defineComponent, reactive, ref, computed, watch } from "vue";
+import { useStore } from "vuex";
 import "bootstrap/dist/css/bootstrap.min.css";
-import ColumnList, { ColumnProps } from "./components/ColumnList.vue";
-import GlobalHeader, { UserProps } from "./components/GlobalHeader.vue";
-import ValidateInput, { RulesProp } from './components/ValidateInput.vue'
-import ValidateForm from './components/ValidateForm.vue'
-
-const testData: ColumnProps[] = [
-  {
-    id: 1,
-    title: "asdas1的专栏",
-    description: "这是test1的专栏,是一个恒有与i四的简介",
-    avatar:
-      "http://vue-maker.oss-cn-hangzhou.aliyuncs.com/vue-marker/5ee22dd58b3c4520912b9470.jpg",
-  },
-  {
-    id: 1,
-    title: "asdas2的专栏",
-    description: "这是test1的专栏,是一个恒有与i四的简介",
-    // avatar: 'http://vue-maker.oss-cn-hangzhou.aliyuncs.com/vue-marker/5ee22dd58b3c4520912b9470.jpg'
-  },
-  {
-    id: 1,
-    title: "asdas1的专栏",
-    description: "这是test1的专栏,是一个恒有与i四的简介",
-    avatar:
-      "http://vue-maker.oss-cn-hangzhou.aliyuncs.com/vue-marker/5ee22dd58b3c4520912b9470.jpg",
-  },
-  {
-    id: 1,
-    title: "asdas2的专栏",
-    description: "这是test1的专栏,是一个恒有与i四的简介",
-    avatar:
-      "http://vue-maker.oss-cn-hangzhou.aliyuncs.com/vue-marker/5ee22dd58b3c4520912b9470.jpg",
-  },
-];
+import GlobalHeader from "./components/GlobalHeader.vue";
+import Loader from "./components/Loader.vue";
+import createMessage from "./components/createMessage";
 
 export default defineComponent({
   name: "App",
   components: {
-    ColumnList,
     GlobalHeader,
-    ValidateInput,
-    ValidateForm
+    Loader,
   },
   setup() {
-    const store = useStore()
-    const currentUser = computed(() => store.state.user)
-  
+    const store = useStore();
+    const currentUser = computed(() => store.state.user);
+    const isLoading = computed(() => store.state.loading);
+    const error = computed(() => store.state.error);
+    watch(
+      () => error.value.status,
+      () => {
+        const { status, message } = error.value;
+        if (status && message) {
+          createMessage(message, "error");
+        }
+      }
+    );
     return {
       currentUser,
+      isLoading,
+      error,
     };
   },
 });

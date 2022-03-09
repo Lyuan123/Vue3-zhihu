@@ -28,7 +28,7 @@ import { defineComponent, computed, onMounted,ref,reactive } from 'vue'
 import {testData} from '../testData'
 import {useStore} from 'vuex'
 import {GlobalDataProps} from '../store'
-import ColumnList, { ColumnProps } from "../components/ColumnList.vue";
+import ColumnList from "../components/ColumnList.vue";
 import "bootstrap/dist/css/bootstrap.min.css";
 export default defineComponent({
   name: 'Home',
@@ -37,6 +37,9 @@ export default defineComponent({
   },
   setup() {
     const store = useStore<GlobalDataProps>()
+    onMounted(() =>{
+      store.dispatch('fetchColumns')
+    })
   const list = computed(() => store.state.columns)
   
     return {

@@ -102,39 +102,42 @@ export default defineComponent({
     // }
     const onFormSubmit = (result: boolean) => {
       if (result) {
-        const { columnId } = store.state.user
-        const newPost:PostProps ={
+        const { column } = store.state.user
+        if(column){
+          const newPost:PostProps={
           id:new Date().getTime(),
           title:titleVal.value,
           content: contentVal.value,
-          columnId,
+         column,
           createdAt:new Date().toLocaleString()
         }
         store.commit('createPost',newPost)
-        router.push({name:'column',params:{id:columnId}})
+        router.push({name:'column',params:{id:column}})
+        }
+        
         }}
     // const onFormSubmit = (result: boolean) => {
     //   if (result) {
-    //     const { column, _id } = store.state.user
-    //     if (column) {
+    //     const { columnId } = store.state.user
+    //     if (columnId) {
     //       const newPost: PostProps = {
     //         title: titleVal.value,
     //         content: contentVal.value,
-    //         column,
-    //         author: _id
+    //         columnId,
+    //         // author: _id
     //       }
-    //       if (imageId) {
-    //         newPost.image = imageId
-    //       }
+    //       // if (imageId) {
+    //       //   newPost.image = imageId
+    //       // }
     //       const actionName = isEditMode ? 'updatePost' : 'createPost'
     //       const sendData = isEditMode ? {
     //         id: route.query.id,
     //         payload: newPost
     //       } : newPost
     //       store.dispatch(actionName, sendData).then(() => {
-    //         createMessage('发表成功，2秒后跳转到文章', 'success', 2000)
+    //         // createMessage('发表成功，2秒后跳转到文章', 'success', 2000)
     //         setTimeout(() => {
-    //           router.push({ name: 'column', params: { id: column } })
+    //           router.push({ name: 'column', params: { id: columnId } })
     //         }, 2000)
     //       })
     //     }
