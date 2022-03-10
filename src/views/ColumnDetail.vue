@@ -30,7 +30,7 @@ export default defineComponent({
     const currentId = route.params.id
     onMounted(()=>{
       store.dispatch('fetchColumn',currentId)
-      store.dispatch('fetchPost',currentId)
+      store.dispatch('fetchPosts',currentId)
     })
     const column = computed(() => store.getters.getColumnById(currentId))
     const list = computed(() => store.getters.getPostsByCid(currentId))
