@@ -45,7 +45,7 @@ export interface ResponseType<P = {}> {
     image?: ImageProps | string;
     createdAt?: string;
     column: string;
-    author?:string;
+    author?: string | UserProps;
   }
   const getAndCommit = async(url: string, mutationName: string,commit:Commit) => {
     const { data } = await axios.get(url)
