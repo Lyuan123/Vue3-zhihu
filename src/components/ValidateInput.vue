@@ -7,6 +7,7 @@
       @blur="validateInput"
       :value="inputRef.val"
       @input="updateValue"
+      v-model="inputRef.val"
       v-bind="$attrs"
     >
     <textarea
@@ -47,13 +48,13 @@ export default defineComponent({
     console.log(context.attrs);
     
     const inputRef = reactive({
-      // val: computed({
-      //   get: () => props.modelValue || '',
-      //   set: val => {
-      //     context.emit('update:modelValue', val)
-      //   }
-      // }),
-      val:props.modelValue|| '',
+      val: computed({
+        get: () => props.modelValue || '',
+        set: val => {
+          context.emit('update:modelValue', val)
+        }
+      }),
+      // val:props.modelValue|| '',
       error: false,
       message: ''
     })

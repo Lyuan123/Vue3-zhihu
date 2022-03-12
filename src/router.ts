@@ -41,11 +41,11 @@ const router = createRouter({
       name: 'column',
       component: ColumnDetail
     },
-    // {
-    //   path: '/posts/:id',
-    //   name: 'post',
-    //   component: PostDetail
-    // }
+    {
+      path: '/posts/:id',
+      name: 'post',
+      component: PostDetail
+    }
   ]
 })
 router.beforeEach((to, from, next) => {

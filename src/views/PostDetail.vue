@@ -6,21 +6,21 @@
     >
       <p>确定要删除这篇文章吗？</p>
     </modal>
-    <article class="w-75 mx-auto mb-5 pb-3" v-if="currentPost">
-      <img :src="currentImageUrl" alt="currentPost.title" class="rounded-lg img-fluid my-4" v-if="currentImageUrl">
-      <h2 class="mb-4">{{currentPost.title}}</h2>
+    <article class="w-75 mx-auto mb-5 pb-3" v-if="state.hhh">
+      <img :src="currentImageUrl" alt="state.hhh.title" class="rounded-lg img-fluid my-4" v-if="state.hhh">
+      <h2 class="mb-4">{{state.hhh.title}}</h2>
       <div class="user-profile-component border-top border-bottom py-3 mb-5 align-items-center row g-0">
         <div class="col">
-          <user-profile :user="currentPost.author" v-if="typeof currentPost.author === 'object'"></user-profile>
+          <user-profile :user="state.hhh.author" v-if="typeof state.hhh.author === 'object'"></user-profile>
         </div>
-        <span class="text-muted col text-right font-italic">发表于：{{currentPost.createdAt}}</span>
+        <span class="text-muted col text-right font-italic">发表于：{{state.hhh.createdAt}}</span>
       </div>
       <div v-html="currentHTML"></div>
       <div v-if="showEditArea" class="btn-group mt-5">
         <router-link
           type="button"
           class="btn btn-success"
-          :to="{name: 'create', query: { id: currentPost._id}}"
+          :to="{name: 'create', query: { id: state.hhh._id}}"
         >
           编辑
         </router-link>
@@ -31,7 +31,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, computed, ref } from 'vue'
+import { defineComponent, onMounted, computed, ref ,reactive} from 'vue'
 import MarkdownIt from 'markdown-it'
 import { useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
@@ -39,6 +39,7 @@ import { GlobalDataProps, PostProps, ImageProps, UserProps, ResponseType } from 
 import UserProfile from '../components/UserProfile.vue'
 import Modal from '../components/Modal.vue'
 import createMessage from '../components/createMessage'
+import axios from 'axios'
 
 export default defineComponent({
   name: 'post-detail',
@@ -53,32 +54,37 @@ export default defineComponent({
     const modalIsVisible = ref(false)
     const currentId = route.params.id
     const md = new MarkdownIt()
-    onMounted(() => {
-      store.dispatch('fetchPost', currentId)
+     const state = reactive({
+      hhh: {} as PostProps
     })
-    const currentPost = computed<PostProps>(() => store.getters.getCurrentPost(currentId))
-    const currentHTML = computed(() => {
-      const { content, isHTML } = currentPost.value
-      if (currentPost.value && content) {
+    const currentPoasdst=axios.get(`/api/posts/${currentId}`).then((Res) =>{
+      // state.hhh=
+      state.hhh=   Res.data.data
+    })
+   const currentPost = state.hhh
+   console.log(currentPost,"currentPost");
+   
+     
+    
+    const currentHTML = computed<PostProps>(() => {
+      const  { content, isHTML }  = state.hhh
+     if (content) {
         return isHTML ? content : md.render(content)
       }
     })
     const showEditArea = computed(() => {
       const { isLogin, _id } = store.state.user
-      if (currentPost.value && currentPost.value.author && isLogin) {
-        const postAuthor = currentPost.value.author as UserProps
+      if (state.hhh && state.hhh.author && isLogin) {
+        const postAuthor = state.hhh.author as UserProps
         return postAuthor._id === _id
       } else {
         return false
       }
     })
     const currentImageUrl = computed(() => {
-      if (currentPost.value && currentPost.value.image) {
-        const { image } = currentPost.value
-        return (image as ImageProps).url + '?x-oss-process=image/resize,w_850'
-      } else {
-        return null
-      }
+        const { image } = state.hhh
+        return (image as ImageProps).url 
+     
     })
     const hideAndDelete = () => {
       modalIsVisible.value = false
@@ -90,12 +96,13 @@ export default defineComponent({
       })
     }
     return {
-      currentPost,
+      currentPoasdst,
+      state,
       currentImageUrl,
       currentHTML,
       showEditArea,
       modalIsVisible,
-      hideAndDelete
+      hideAndDelete,
     }
   }
 })

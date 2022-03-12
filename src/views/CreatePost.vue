@@ -5,7 +5,7 @@
       action="/api/upload"
        :beforeUpload="uploadCheck"
        @file-uploaded="handleFileUploaded"
-      class="d-flex align-items-center justify-content-center bg-light text-secondary w-100 my-4"
+       :uploaded="uploadedData"
     >
       <h2>点击上传头图</h2>
       <template #loading>
@@ -87,10 +87,14 @@ export default defineComponent({
       if (isEditMode) {
         store.dispatch('fetchPost', route.query.id).then((rawData: ResponseType<PostProps>) => {
           const currentPost = rawData.data
+          console.log('currentPost',currentPost);
+          
           if (currentPost.image) {
             uploadedData.value = { data: currentPost.image }
           }
           titleVal.value = currentPost.title
+          console.log(titleVal.value);
+          
           contentVal.value = currentPost.content || ''
         })
       }
@@ -113,7 +117,12 @@ export default defineComponent({
         if(imageId){
           newPost.image = imageId
         }
-        store.dispatch('createPost',newPost).then(() => {
+         const actionName = isEditMode ? 'updatePost' : 'createPost'
+          const sendData = isEditMode ? {
+            id: route.query.id,
+            payload: newPost
+          } : newPost
+        store.dispatch(actionName,sendData).then(() => {
             createMessage('发表成功，2秒后跳转到文章', 'success', 2000)
             setTimeout(() => {
               router.push({ name: 'column', params: { id: column } })
@@ -135,7 +144,7 @@ export default defineComponent({
                 'Content-Type': 'multipart/form-data'
               }
             }).then((resp:any) => {
-              console.log(resp);
+              console.log(resp,'resp');
               
             })
           }
