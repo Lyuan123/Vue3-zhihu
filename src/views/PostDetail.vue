@@ -66,7 +66,7 @@ export default defineComponent({
    
      
     
-    const currentHTML = computed<PostProps>(() => {
+    const currentHTML = computed(() => {
       const  { content, isHTML }  = state.hhh
      if (content) {
         return isHTML ? content : md.render(content)
